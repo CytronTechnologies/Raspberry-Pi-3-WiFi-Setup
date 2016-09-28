@@ -1,0 +1,10 @@
+#enable serial port profile
+sudo sdptool add SP
+
+#enable discovery
+sudo hciconfig hci0 piscan
+sudo hciconfig hci0
+
+#start listen to paired clients
+#start bluetooth console once connected
+sudo rfcomm watch hci0 1 getty rfcomm0 115200 vt100 -a pi

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ID="$(ifconfig uap0 | grep HW | cut -d ' ' -f11)"
+#newID=$(echo "$ID" | tr ':' '')
+newID=$(echo "$ID" | tr --delete ':')
+
+sed -i "0,/ssid/ s/ssid=.*/ssid=PI3-$(echo $newID)/" /etc/hostapd/hostapd.conf
+
+CH="$(iwlist wlan0 channel |grep 'Current Frequency' | cut -d ' ' -f15 | cut -d ')' -f1)"
+if [ -z "$CH" ]
+then
+	sed -i "s/channel=[0-9]*/channel=6/" /etc/hostapd/hostapd.conf
+else
+	sed -i "s/channel=[0-9]*/channel=$(echo $CH)/" /etc/hostapd/hostapd.conf
+fi
