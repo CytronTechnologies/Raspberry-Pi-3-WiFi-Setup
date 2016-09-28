@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Raspberry Pi 3 - Setup WiFi Connection</title>
+<link href="resources/images/Cytron-Favicon.png" rel="icon">
+<style>
+			html,body{height:100%;padding:0;margin:0;}
+			body {color:#959595; font:normal 12px/2.0em Sans-Serif;} 
+			h1, h2, h3, h4, h5, h6 {color:black;line-height:1.1}
+			#page { background:#fff;}
+			#header, #footer, #top-nav, #content, #content #contentbar, #content #msgbar, #content #sidebar { margin:0; padding:0;}
+						
+			/* Logo */
+			#logo {position:relative;margin:10px;padding:0; width:50px;height:50px}
+			#logo img{height:100%;width:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;}
+
+			/* Header */
+			#header { background:black; }
+			#header-inner {padding:0;}
+			#header-inner > div{vertical-align:middle;display:inline-block;}
+			
+			/* Feature */
+			.feature{padding:0 20px;}
+			.feature-inner h1 {font-size:32px;color:white;margin:0;}
+			
+			/* Menu */
+			#top-nav { display:block;margin:10px auto 0 auto;width:100%;}
+			#top-nav ul { list-style:none; padding:0;margin:0}
+			#top-nav ul li { margin:0; padding:0;display:inline-block;}
+			#top-nav ul li a {display:block;padding:5px 20px; color:black; text-decoration:none;font-size:18px;color:white;}
+			#top-nav ul li.active a{background:white;color:#00aced}
+			#top-nav ul li a:hover {color:#00aced}
+			
+			/* Content */
+			#content-inner { display:table;padding:10px 0;background:#fff;}
+			#content #contentbar { display:table-cell;margin:0; padding:0;}
+			#content #contentbar .article { margin:0 0 24px; padding:0 20px 0 15px; }
+/*
+			#content #sidebar { display:table-cell;padding:0;width:200px;}
+			#content #sidebar .widget { margin:0 0 12px; padding:8px 8px 8px 13px;line-height:1.4em;}
+			#content #sidebar .widget h2 a { text-decoration:none;}
+			#content #sidebar .widget ul { margin:0; padding:0; list-style:none; color:#959595;}
+			#content #sidebar .widget ul li { margin:4px 0;padding:0;}
+			#content #sidebar .widget ul li a{ font-size:20px;color:white; text-decoration:none;display:block;line-height: 36px;padding-left:10px;width:80%;background:black;
+position: relative;}
+			#content #sidebar .widget ul li.active a{background:#f39c12;}
+			#content #sidebar .widget ul li a:hover{background:#00aced;}
+#content #sidebar .widget ul li a:after {content: '';position: absolute;top: 0; right: -18px; width: 36px; height: 36px;transform: scale(0.707) rotate(45deg);z-index: 1;background:inherit;border-radius: 0 5px 0 50px;}*/
+			/* Footer */
+			#footer { background:black;color:white;width:100%;}
+			#footer-inner {padding:10px 0;margin:auto; text-align:center;font-size:20px;}
+			#footer-inner div{vertical-align:middle;display:inline-block;}
+			#footer a {color:green;text-decoration:none;}
+			
+			/* Clear both sides to assist with div alignment  */
+			.clr { clear:both; padding:0; margin:0; width:100%; font-size:0px; line-height:0px;}
+			.page-wrap {min-height: 100%;margin-bottom:-84px}
+			.page-wrap:after {content: "";display: block;}
+			#footer, .page-wrap:after {height: 80px;}
+			.layout{max-width:992px;margin:0 auto;}
+			table{
+	border-collapse: separate; /* allow spacing between cell borders */
+}
+@media (max-width: 511px){
+	.feature{
+		padding-left:20px;
+	}
+}
+@media (min-width: 512px){
+	.feature{
+		padding:0;
+	}
+}
+@media (max-width: 321px){
+	#footer, .page-wrap:after {height: 106px}
+	.page-wrap {margin-bottom:-106px}
+}
+input[type="text"],input[type="email"],input[type="password"]{
+	width:100%;
+	max-width:200px;
+}
+	</style>
+</head>
+<?php include 'scanWiFi.php';?>
+<body>
+<div class="page-wrap" id="page">
+<div id="header">
+<div class="layout" id="header-inner">
+<div id="logo"><img src="resources/images/Raspi-PGB001.png" alt="Cytron Logo" /></div>
+<!--<div class="clr">&nbsp;</div>-->
+<div class="feature">
+<div class="feature-inner">
+<h1><b>Raspberry Pi 3 WiFi Setup</b></h1>
+</div>
+</div>
+<div id="top-nav">
+<ul>
+	<li class="active"><a href="/" onclick="setPage(1)">Setup</a></li>
+	<li><a href="/guide" onclick="setPage(2)">Guide</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="content">
+<div class="layout" id="content-inner">
+
+<main id="contentbar">
+<div class="article">
+<form id="myform" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<table border="0">
+	<tbody>
+		<tr><td colspan="2"><h2 style="margin:0;padding:5px 0 15px 0;">WiFi settings</h2></td></tr>
+		<tr>
+			<td valign="top"><strong>SSID</strong></td>
+			<td><select id="wifiselect" name="ssid" onchange="clearManualInput()"><option disabled selected value="">Please choose WiFi</option><?php $wifi=scanWiFi();
+			for($i=0;$i<count($wifi);$i++){
+				echo ('<option value="'.$wifi[$i].'">'.$wifi[$i].'</option>');
+			}
+			?></select>
+		<p style="margin:0">or type manually<div><input onclick="resetSelect()" name="ssid2" type="text"/></div></p></td>
+		</tr>
+		<tr>
+			<td><strong>Password</strong></td>
+			<td><input name="password" type="password"/></td>
+		</tr>
+		<tr><td colspan="2" style="padding:2px 0;"><a id="showPwd" href="javascript:void(0)" onclick="togglePasswordFieldClicked()">Show password</a></td></tr>
+		<tr><td colspan="2" style="padding:10px 0;"><div style="height:1px;background:#ddd"></div></td></tr>
+		<tr><td colspan="2"><h2 style="padding:5px 0 15px 0;margin:0;">Notification method: (choose at least one)</h2></td></tr>
+		<tr>
+			<td valign="top"><strong>Phone</strong></td>
+			<td><input maxlength="11" name="phone" type="text"/><p style="margin:0">eg: 0124889123</p></td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Email</strong></td>
+			<td><input name="email" type="email"/><p style="margin:0">eg: james@gmail.com</p></td>
+		</tr>
+	</tbody>
+</table>
+<div style="display:table;margin:15px 0;width:100%;">
+<input style="height:25px;width:100px;display:table-cell" type="button" value="Submit" onclick="confirm();return false;"/>
+<div id="msg" style="display:table-cell"></div>
+</div>
+</form>
+</div>
+</main>
+</div>
+</div>
+</div><!--page wrap-->
+<footer id="footer">
+<div id="footer-inner">
+<div>Brought to you by </div><div style="overflow:hidden;width:150px;height:60px;position:relative;display:inline-block"><img style="height:inherit;width:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto" src="resources/images/Cytron-Logo-LIGHT_BLUE.png" alt="Cytron Logo" /></div>
+</div>
+</footer>
+<script src="resources/js/jquery.min.js"></script>
+<script type="text/javascript">	
+function togglePasswordFieldClicked() {
+	var passwordField = document.querySelectorAll('input[name^="password"]');
+	for(var i=0;i<passwordField.length;i++){
+		var value = passwordField[i].value;
+		if(passwordField[i].type == 'password') {
+			passwordField[i].type = 'text';
+			document.getElementById('showPwd').innerHTML='Hide Password';
+		}
+		else {
+			passwordField[i].type = 'password';
+			document.getElementById('showPwd').innerHTML='Show Password';
+		}
+		passwordField[i].value = value;
+	}
+}
+function resetSelect(){
+	var options = document.querySelectorAll('#wifiselect option');
+	options[0].selected = true;
+}
+function clearManualInput(){
+	document.querySelector('input[name="ssid2"]').value="";
+}
+
+function confirm(){
+	var dataToSent = $('#myform').serializeArray();
+	$.ajax({
+              	url: "/settings.php",
+              	type: "POST",
+             	data: $.param(dataToSent),
+              	//processData: false,  // tell jQuery not to process the data
+              	//contentType: false   // tell jQuery not to set contentType
+	}).done(function( data ) {
+		//when done
+		console.log(data);
+		//window.location.href = '/user/profile';
+		//location.reload(true)
+	});}
+</script>
+</body>
+</html>
