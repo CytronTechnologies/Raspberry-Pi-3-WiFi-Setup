@@ -1,7 +1,16 @@
 #!/bin/bash
 
+version=`uname -v`
+version=${version%% *}
+version=${version#*#}
+if test $version -ge 1023;then
+ID="$(ifconfig uap0 | grep ether | cut -d ' ' -f10)"
+else
 ID="$(ifconfig uap0 | grep HW | cut -d ' ' -f11)"
-#newID=$(echo "$ID" | tr ':' '')
+fi
+if [ -z "$ID" ];then
+ID="11:22:33:44:55:66"
+fi
 newID=$(echo "$ID" | tr --delete ':')
 
 sed -i "0,/ssid/ s/ssid=.*/ssid=PI3-$(echo $newID)/" /etc/hostapd/hostapd.conf

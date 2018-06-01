@@ -18,5 +18,7 @@ if [ "$_IP" ]; then
 fi
 
 #iptables-restore < /etc/iptables.ipv4.nat
-#hostapdstart > 1&
+
+hostapdstart > hotspot.log&
+
 exit 0

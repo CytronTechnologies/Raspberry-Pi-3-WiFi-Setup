@@ -1,8 +1,14 @@
-iw dev wlan0 interface add uap0 type __ap
-service dnsmasq restart
+#iw dev wlan0 interface add uap0 type __ap
+#service dnsmasq restart
+ifdown --force wlan0 && ifdown --force uap0 && ifup uap0
 sysctl net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -s 192.168.2.0/24 ! -d 192.168.2.0/24 -j MASQUERADE
 #iptables-restore < /etc/iptables.ipv4.nat
-ifup uap0
-configuration
-hostapd /etc/hostapd/hostapd.conf
+#ifup uap0
+#/usr/local/bin/configuration
+mv /dev/random /dev/random.orig
+ln -s /dev/urandom /dev/random
+#hostapd /etc/hostapd/hostapd.conf
+systemctl restart dnsmasq
+sleep 20
+ifup wlan0
