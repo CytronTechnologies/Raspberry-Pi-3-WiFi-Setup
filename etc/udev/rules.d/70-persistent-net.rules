@@ -1,7 +1,11 @@
 SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="eth0", NAME="eth0"
 
-# Remember to change mac address based on your raspberry pi
+SUBSYSTEM=="ieee80211", ACTION=="add|change", KERNEL=="phy0", \
+  RUN+="/sbin/iw phy phy0 interface add uap0 type __ap"
+  
+# By default it automatically use wlan0 mac address as AP address, 
+# IF if is not working, uncomment below and change mac address based on your raspberry pi wlan0 mac address
 
-SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="b8:27:eb:f9:d0:61", KERNEL=="phy0", \
-  RUN+="/sbin/iw phy phy0 interface add uap0 type __ap", \
-  RUN+="/bin/ip link set uap0 address b8:27:eb:f9:d0:61"
+#SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="b8:27:eb:f9:d0:61", KERNEL=="phy0", \
+#  RUN+="/sbin/iw phy phy0 interface add uap0 type __ap", \
+#  RUN+="/bin/ip link set uap0 address b8:27:eb:f9:d0:61"
